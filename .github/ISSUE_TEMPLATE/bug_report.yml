@@ -1,0 +1,121 @@
+name: 🐛 Bug 报告
+description: 报告 PinCanvas 的功能异常或缺陷
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你抽时间提交 bug 报告！请尽可能详细地填写以下信息，方便我们快速定位问题。
+
+        在提交之前，请先：
+        - 🔍 在 [现有 Issues](https://github.com/tdsoc2002/PinCanvas/issues?q=is%3Aissue) 中搜索是否已有同类问题
+        - 📖 查阅 [README](https://github.com/tdsoc2002/PinCanvas/blob/main/README.md) 与 [文档](https://github.com/tdsoc2002/PinCanvas/tree/main/docs)
+        - 🆕 尝试拉取最新代码，确认问题在 `main` 分支仍存在
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前检查
+      description: 请确认以下事项
+      options:
+        - label: 我已搜索过现有 Issues，未发现重复问题
+          required: true
+        - label: 我已尝试拉取最新代码，问题仍然存在
+          required: true
+        - label: 我已阅读相关文档，确认这不是配置问题
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug 描述
+      description: 清晰简洁地描述问题
+      placeholder: 例如：点击「生成」按钮后，节点显示生成失败，但控制台没有错误信息
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 让我们能够稳定复现这个问题
+      placeholder: |
+        1. 打开 PinCanvas
+        2. 添加 GenImage 节点
+        3. 配置模型为 ...
+        4. 点击「生成」按钮
+        5. 观察到 ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 你期望发生什么？
+      placeholder: 期望节点显示生成中状态，并最终显示生成结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 实际发生了什么？请附上截图、日志或控制台输出
+      placeholder: |
+        节点立即变为失败状态，控制台无任何输出
+        （可拖拽图片到此处上传截图）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 浏览器
+      description: 在哪个浏览器中遇到？
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - 其他（请在补充信息中说明）
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: 操作系统
+      description: 例如 macOS 14.5、Windows 11、Ubuntu 22.04
+      placeholder: macOS 14.5
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: PinCanvas 版本 / 提交 SHA
+      description: 通过 `git rev-parse --short HEAD` 获取
+      placeholder: 例如 v0.0.1 或 c427701
+    validations:
+      required: true
+
+  - type: input
+    id: runtime
+    attributes:
+      label: 运行时版本
+      description: Bun 或 Node.js 版本（`bun --version` / `node --version`）
+      placeholder: bun 1.3.10
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 补充信息
+      description: 任何其他可能有助于定位问题的信息（错误日志、网络请求、相关配置等）
+      placeholder: 例如：使用了自定义模型 xxx，base URL 为 ...
+    validations:
+      required: false

@@ -1,0 +1,223 @@
+import { useEffect } from 'react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
+import { getModelDisplayName } from '@/api/models';
+import {
+  FEATURE_DISABLED_MESSAGE,
+  isNodeFeatureEnabled,
+} from '@/config/features';
+import { useGenerationTrigger } from '@/hooks/useGenerationTrigger';
+import { useModels } from '@/hooks/useModels';
+import { useUpstream } from '@/hooks/useUpstream';
+import { useCanvas } from '@/store/canvas';
+import { useLibrary } from '@/store/library';
+import { useNodeTask } from '@/store/tasks';
+import type {
+  GenerateCharacterVideoNode as GenCharVidNodeT,
+  NodeId,
+} from '@/types/node';
+import {
+  firstAllowedVideoValue,
+  videoDurationOptions,
+  videoRatioOptions,
+  videoResolutionOptions,
+} from '@/utils/videoModelOptions';
+import { frameClass, NODE_BODY, NODE_HEADER } from './shared';
+
+export function GenerateCharacterVideoNodeComp({ id, selected }: NodeProps) {
+  const nid = id as NodeId;
+  const VIDEO_MODELS = useModels('video');
+  const node = useCanvas(
+    (s) => s.nodes.find((n) => n.id === nid) as GenCharVidNodeT | undefined,
+  );
+  const patchSettings = useCanvas((s) => s.patchSettings);
+  const upstream = useUpstream(nid);
+  const characters = useLibrary((s) => s.characters);
+  const character = useLibrary((s) =>
+    node?.settings.characterId
+      ? s.characters.find((c) => c.id === node.settings.characterId)
+      : undefined,
+  );
+  const task = useNodeTask(nid);
+  const trigger = useGenerationTrigger();
+  const isBusy = task?.status === 'pending' || task?.status === 'running';
+  const currentSettings =
+    node?.kind === 'generate-character-video' ? node.settings : undefined;
+  const selectedModel = currentSettings
+    ? VIDEO_MODELS.find((m) => m.id === currentSettings.model)
+    : undefined;
+  const durationOptions = videoDurationOptions(selectedModel);
+  const ratioOptions = videoRatioOptions(selectedModel);
+  const resolutionOptions = videoResolutionOptions(selectedModel);
+
+  useEffect(() => {
+    if (!node || node.kind !== 'generate-character-video' || isBusy) return;
+    const nextDuration = firstAllowedVideoValue(node.settings.duration, durationOptions, '5s');
+    const nextRatio = firstAllowedVideoValue(node.settings.ratio, ratioOptions, '16:9');
+    const nextResolution = firstAllowedVideoValue(
+      node.settings.resolution,
+      resolutionOptions,
+      '720p',
+    );
+    if (
+      nextDuration !== node.settings.duration ||
+      nextRatio !== node.settings.ratio ||
+      nextResolution !== node.settings.resolution
+    ) {
+      patchSettings<'generate-character-video'>(nid, {
+        duration: nextDuration,
+        ratio: nextRatio,
+        resolution: nextResolution,
+      });
+    }
+  }, [durationOptions, isBusy, nid, node, patchSettings, ratioOptions, resolutionOptions]);
+
+  if (!node || node.kind !== 'generate-character-video') return null;
+  const settings = node.settings;
+  const disabled = !isNodeFeatureEnabled(node.kind);
+
+  return (
+    <div className={frameClass(selected)}>
+      <Handle type="target" position={Position.Left} />
+      <Handle type="source" position={Position.Right} />
+      <div className={NODE_HEADER}>
+        <span>角色视频</span>
+        <span className="ml-auto truncate text-zinc-400">
+          {character ? character.name : '未选择'}
+        </span>
+      </div>
+      <div className={`${NODE_BODY} flex flex-col gap-1.5 overflow-y-auto px-2 py-1.5`}>
+        <select
+          className="nodrag rounded border border-zinc-200 bg-white px-1.5 py-1 text-xs"
+          value={settings.characterId ?? ''}
+          onChange={(e) =>
+            patchSettings<'generate-character-video'>(nid, {
+              characterId: e.target.value || undefined,
+            })
+          }
+          disabled={isBusy}
+        >
+          <option value="">— 选择角色 —</option>
+          {characters.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        <select
+          className="nodrag rounded border border-zinc-200 bg-white px-1.5 py-1 text-xs"
+          value={settings.model}
+          onChange={(e) =>
+            patchSettings<'generate-character-video'>(nid, { model: e.target.value })
+          }
+          disabled={isBusy}
+        >
+          {VIDEO_MODELS.map((m) => (
+            <option key={m.id} value={m.id}>
+              {getModelDisplayName(m)}
+            </option>
+          ))}
+        </select>
+        <textarea
+          className="nodrag h-12 resize-none rounded border border-zinc-200 bg-white px-1.5 py-1 text-xs"
+          placeholder="附加 video prompt（可选，留空用角色 prompt/description）"
+          value={settings.videoPrompt ?? ''}
+          onChange={(e) =>
+            patchSettings<'generate-character-video'>(nid, { videoPrompt: e.target.value })
+          }
+          disabled={isBusy}
+        />
+        <div className="flex gap-1">
+          <select
+            className="nodrag flex-1 rounded border border-zinc-200 bg-white px-1.5 py-1 text-[11px]"
+            value={String(settings.duration ?? '5s')}
+            onChange={(e) =>
+              patchSettings<'generate-character-video'>(nid, { duration: e.target.value })
+            }
+            disabled={isBusy}
+          >
+            {durationOptions.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+          <select
+            className="nodrag flex-1 rounded border border-zinc-200 bg-white px-1.5 py-1 text-[11px]"
+            value={settings.ratio ?? '16:9'}
+            onChange={(e) =>
+              patchSettings<'generate-character-video'>(nid, { ratio: e.target.value })
+            }
+            disabled={isBusy}
+          >
+            {ratioOptions.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+          <select
+            className="nodrag flex-1 rounded border border-zinc-200 bg-white px-1.5 py-1 text-[11px]"
+            value={settings.resolution ?? '720p'}
+            onChange={(e) =>
+              patchSettings<'generate-character-video'>(nid, { resolution: e.target.value })
+            }
+            disabled={isBusy}
+          >
+            {resolutionOptions.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+        </div>
+        {character?.imageUrl && (
+          <div className="flex items-center gap-1">
+            <img
+              src={character.imageUrl}
+              alt="首帧"
+              className="h-10 w-10 shrink-0 rounded border border-zinc-200 object-cover"
+            />
+            <span className="text-[10px] text-zinc-400">首帧来自角色形象</span>
+          </div>
+        )}
+        {upstream.audioUrls.length > 0 && (
+          <div className="flex flex-col gap-1 rounded border border-zinc-200 bg-zinc-50 p-1">
+            {upstream.audioUrls.slice(0, 3).map((url, i) => (
+              <audio
+                key={`${url}-${i}`}
+                src={url}
+                controls
+                className="nodrag h-8 w-full"
+              />
+            ))}
+            <span className="text-[10px] text-zinc-400">已连接音频参考</span>
+          </div>
+        )}
+        {node.content && (
+          <video
+            src={node.content}
+            controls
+            className="nodrag max-h-28 w-full rounded border border-zinc-200 bg-black"
+          />
+        )}
+        {task?.error && (
+          <div className="rounded bg-red-50 px-1.5 py-1 text-[11px] text-red-700">
+            {task.error}
+          </div>
+        )}
+        <div className="rounded bg-amber-50 px-1.5 py-1 text-[11px] font-medium text-amber-700">
+          {FEATURE_DISABLED_MESSAGE}
+        </div>
+        <button
+          type="button"
+          className="nodrag rounded bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:bg-zinc-300"
+          disabled={disabled}
+          title={FEATURE_DISABLED_MESSAGE}
+          onClick={() => trigger(nid)}
+        >
+          即将上线
+        </button>
+      </div>
+    </div>
+  );
+}

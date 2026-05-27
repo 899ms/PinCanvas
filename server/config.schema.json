@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PinCanvas Server Configuration",
+  "type": "object",
+  "properties": {
+    "storage": {
+      "type": "object",
+      "description": "对象存储配置（S3 兼容）",
+      "properties": {
+        "region": {
+          "type": "string",
+          "description": "存储区域，如 cn-beijing, cn-shanghai",
+          "examples": ["cn-beijing"]
+        },
+        "bucket": {
+          "type": "string",
+          "description": "存储桶名称"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "S3 兼容端点 URL",
+          "format": "uri"
+        },
+        "publicBaseUrl": {
+          "type": "string",
+          "description": "公共访问基础 URL",
+          "format": "uri"
+        },
+        "accessKeyId": {
+          "type": "string",
+          "description": "访问密钥 ID"
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "description": "访问密钥 Secret"
+        },
+        "namespaceSalt": {
+          "type": "string",
+          "description": "存储命名空间盐值（用于生成唯一路径）"
+        }
+      },
+      "required": [
+        "region",
+        "bucket",
+        "endpoint",
+        "publicBaseUrl",
+        "accessKeyId",
+        "secretAccessKey",
+        "namespaceSalt"
+      ]
+    }
+  },
+  "required": ["storage"]
+}

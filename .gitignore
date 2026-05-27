@@ -1,0 +1,38 @@
+node_modules
+dist
+dist-ssr
+*.local
+server/config.local.json
+*.tsbuildinfo
+.tapnow-runtime/
+
+# 环境变量与本地配置（含敏感凭证）
+.env
+.env.*
+!.env.example
+server/config.json
+server/config.local.json
+
+# 外部参考产物（版权来源不明，不分发）
+_legacy/
+
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 反向工程产物（不分发）
+decoded/
+*.bak
+.collaborator
+.spec-workflow/
+
+# Playwright MCP 调试产物 + UI 截图
+.playwright-mcp/
+empty-canvas.png
+menu-open.png

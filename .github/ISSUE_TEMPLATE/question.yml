@@ -1,0 +1,69 @@
+name: ❓ 提问 / 求助
+description: 使用过程中遇到困难，需要帮助
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        👋 欢迎提问！为了更高效地帮你解决问题，请尽量详细地说明你的场景。
+
+        > 💬 **提示**：开放性讨论（"用 PinCanvas 做 XXX 的最佳实践？"、"对 YYY 功能怎么看？"）建议发在 [Discussions](https://github.com/tdsoc2002/PinCanvas/discussions)，那里更适合社区交流。
+        >
+        > 🐛 如果你确定是 Bug，请使用 [Bug 报告模板](./new?template=bug_report.yml)。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已查阅 README 与 docs/ 目录下的文档
+          required: true
+        - label: 我已搜索过现有 Issues 与 Discussions
+          required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 你的问题
+      description: 清晰地描述你想问什么
+      placeholder: |
+        例如：我想接入自部署的 Stable Diffusion WebUI，
+        但不确定 PinCanvas 是否支持，以及如何配置 baseUrl 与 API Key。
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 场景与背景
+      description: 你想用 PinCanvas 做什么？目前的工作流是怎样的？
+      placeholder: |
+        例如：我在制作一个分镜动画，需要先用本地 SD 模型生成大量草图，
+        再用云端模型精修，希望能在一个画布里串起来。
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: 你已经尝试了什么
+      description: 列出你已经查阅的文档、尝试的配置、看过的代码等
+      placeholder: |
+        - 看了 docs/model-routing.md，但不确定 provider 字段填什么
+        - 在设置面板添加了自定义模型，base URL 填 http://127.0.0.1:7860，但生成失败
+        - 控制台显示 401 错误
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 浏览器、操作系统、PinCanvas 版本等
+      placeholder: |
+        - 浏览器: Chrome 125
+        - OS: macOS 14.5
+        - PinCanvas: main 分支最新 commit
+    validations:
+      required: false

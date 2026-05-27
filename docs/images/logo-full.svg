@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 256" width="720" height="256">
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="capGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ============ 左侧图标 ============ -->
+  <g transform="translate(0,0)">
+    <rect x="32" y="32" width="192" height="192" rx="16" ry="16"
+          fill="none" stroke="url(#brandGrad)" stroke-width="3"
+          stroke-dasharray="6 6" opacity="0.35"/>
+
+    <line x1="40" y1="40" x2="128" y2="100" stroke="url(#brandGrad)" stroke-width="2.5" opacity="0.45"/>
+    <line x1="216" y1="40" x2="128" y2="100" stroke="url(#brandGrad)" stroke-width="2.5" opacity="0.45"/>
+    <line x1="40" y1="216" x2="128" y2="180" stroke="url(#brandGrad)" stroke-width="2.5" opacity="0.45"/>
+    <line x1="216" y1="216" x2="128" y2="180" stroke="url(#brandGrad)" stroke-width="2.5" opacity="0.45"/>
+
+    <circle cx="40" cy="40" r="11" fill="url(#brandGrad)"/>
+    <circle cx="40" cy="40" r="4" fill="white"/>
+    <circle cx="216" cy="40" r="11" fill="url(#brandGrad)"/>
+    <circle cx="216" cy="40" r="4" fill="white"/>
+    <circle cx="40" cy="216" r="11" fill="url(#brandGrad)"/>
+    <circle cx="40" cy="216" r="4" fill="white"/>
+    <circle cx="216" cy="216" r="11" fill="url(#brandGrad)"/>
+    <circle cx="216" cy="216" r="4" fill="white"/>
+
+    <ellipse cx="128" cy="200" rx="22" ry="4" fill="#1e3a8a" opacity="0.18"/>
+    <path d="M 124 162 L 132 162 L 128 200 Z" fill="#1e3a8a"/>
+    <ellipse cx="128" cy="162" rx="36" ry="8" fill="#1d4ed8"/>
+    <ellipse cx="128" cy="130" rx="42" ry="38" fill="url(#capGrad)"/>
+    <ellipse cx="128" cy="162" rx="42" ry="6" fill="url(#brandGrad)"/>
+    <ellipse cx="112" cy="112" rx="14" ry="9" fill="white" opacity="0.5"/>
+    <ellipse cx="108" cy="108" rx="6" ry="4" fill="white" opacity="0.85"/>
+  </g>
+
+  <!-- ============ 右侧文字 ============ -->
+  <g transform="translate(280, 0)">
+    <text x="0" y="148"
+          font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif"
+          font-size="92"
+          font-weight="700"
+          letter-spacing="-2"
+          fill="url(#textGrad)">PinCanvas</text>
+    <text x="4" y="190"
+          font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif"
+          font-size="22"
+          font-weight="500"
+          letter-spacing="2"
+          fill="#64748b">NODE · AI · CANVAS</text>
+  </g>
+</svg>
