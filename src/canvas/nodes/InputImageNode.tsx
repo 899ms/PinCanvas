@@ -1,6 +1,7 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { Upload } from 'lucide-react';
-import { useCallback, useRef } from 'react';
+import { Edit3, Trash2, Upload } from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
+import { MaskEditor } from '@/components/MaskEditor';
 import { useCanvas } from '@/store/canvas';
 import type { InputImageNode as InputImageNodeT, NodeId } from '@/types/node';
 import { fileToDataURL } from '@/utils/image';
@@ -17,6 +18,7 @@ export function InputImageNodeComp({ id, selected }: NodeProps) {
   const patchSettings = useCanvas((s) => s.patchSettings);
   const resizeNode = useCanvas((s) => s.resizeNode);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [editingMask, setEditingMask] = useState(false);
 
   const resizeToImage = useCallback(
     (naturalWidth: number, naturalHeight: number) => {
@@ -38,6 +40,7 @@ export function InputImageNodeComp({ id, selected }: NodeProps) {
         filename: file.name,
         width: size.width,
         height: size.height,
+        maskContent: null,
       });
       const fitted = fitImageNodeSize(size.width, size.height);
       resizeNode(nid, fitted.width, fitted.height);
@@ -99,6 +102,34 @@ export function InputImageNodeComp({ id, selected }: NodeProps) {
               draggable={false}
             />
           )}
+          <div className="nodrag absolute bottom-2 right-2 z-10 flex items-center gap-1 rounded-md border border-black/10 bg-white/90 p-1 shadow-sm backdrop-blur">
+            <button
+              type="button"
+              className="flex h-7 w-7 items-center justify-center rounded text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              onClick={(event) => {
+                event.stopPropagation();
+                setEditingMask(true);
+              }}
+              title="编辑蒙版"
+              aria-label="编辑蒙版"
+            >
+              <Edit3 className="h-3.5 w-3.5" />
+            </button>
+            {settings.maskContent && (
+              <button
+                type="button"
+                className="flex h-7 w-7 items-center justify-center rounded text-red-600 hover:bg-red-50"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  patchSettings<'input-image'>(nid, { maskContent: null });
+                }}
+                title="清除蒙版"
+                aria-label="清除蒙版"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <div
@@ -129,6 +160,17 @@ export function InputImageNodeComp({ id, selected }: NodeProps) {
         className="hidden"
         onChange={onFile}
       />
+      {editingMask && settings.content && (
+        <MaskEditor
+          imageUrl={settings.content}
+          initialMask={settings.maskContent}
+          onSave={(maskDataUrl) => {
+            patchSettings<'input-image'>(nid, { maskContent: maskDataUrl });
+            setEditingMask(false);
+          }}
+          onCancel={() => setEditingMask(false)}
+        />
+      )}
     </div>
   );
 }

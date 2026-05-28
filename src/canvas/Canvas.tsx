@@ -18,7 +18,7 @@ import {
   type ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Info, MessageSquare, Play, Trash2 } from 'lucide-react';
+import { Copy, Info, MessageSquare, Play, Trash2, X } from 'lucide-react';
 import {
   type ComponentType,
   type ReactNode,
@@ -74,6 +74,7 @@ function withNodeChrome(Component: ComponentType<any>) {
     const isSelected = props.selected || selectedIds.includes(id);
     const kind = node?.kind ?? (props.type as NodeKind | undefined);
     const featureDisabled = kind ? !isNodeFeatureEnabled(kind) : false;
+    const [infoOpen, setInfoOpen] = useState(false);
 
     return (
       <div
@@ -113,13 +114,16 @@ function withNodeChrome(Component: ComponentType<any>) {
         {isSelected && (
           <NodeHoverToolbar
             node={node}
-            onInfo={() => showNodeInfo(node)}
+            onInfo={() => setInfoOpen((open) => !open)}
             onEdit={() => setSelection([id])}
             onGenerate={() => {
               if (node && canTriggerNode(node.kind)) trigger(id);
             }}
             onDelete={() => removeNode(id)}
           />
+        )}
+        {isSelected && infoOpen && node && (
+          <NodeInfoPopover node={node} onClose={() => setInfoOpen(false)} />
         )}
         <button
           type="button"
@@ -215,6 +219,68 @@ function ToolbarButton({
   );
 }
 
+function NodeInfoPopover({ node, onClose }: { node: AppNode; onClose: () => void }) {
+  const copyId = useCallback(() => {
+    if (typeof navigator !== 'undefined') void navigator.clipboard?.writeText(node.id);
+  }, [node.id]);
+
+  return (
+    <div
+      className="nodrag absolute left-1/2 top-14 z-40 w-72 -translate-x-1/2 rounded-lg border border-zinc-200 bg-white p-3 text-xs text-zinc-700 shadow-xl shadow-zinc-300/40"
+      onPointerDown={(event) => event.stopPropagation()}
+      onMouseDown={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div className="font-semibold text-zinc-900">Node info</div>
+        <button
+          type="button"
+          className="flex h-6 w-6 items-center justify-center rounded text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
+          onClick={onClose}
+          aria-label="Close"
+          title="Close"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <div className="space-y-2">
+        <InfoRow label="Type" value={node.kind} />
+        <div>
+          <div className="mb-1 text-[11px] font-medium text-zinc-400">ID</div>
+          <div className="flex items-center gap-1.5">
+            <input
+              className="h-8 min-w-0 flex-1 rounded border border-zinc-200 bg-zinc-50 px-2 font-mono text-[11px] text-zinc-700"
+              value={node.id}
+              readOnly
+              onFocus={(event) => event.currentTarget.select()}
+            />
+            <button
+              type="button"
+              className="flex h-8 w-8 items-center justify-center rounded border border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              onClick={copyId}
+              aria-label="Copy ID"
+              title="Copy ID"
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+        <InfoRow label="Size" value={`${Math.round(node.width)} x ${Math.round(node.height)}`} />
+        <InfoRow label="Position" value={`${Math.round(node.x)}, ${Math.round(node.y)}`} />
+      </div>
+    </div>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-[11px] font-medium text-zinc-400">{label}</span>
+      <span className="truncate font-medium text-zinc-800">{value}</span>
+    </div>
+  );
+}
+
 function canTriggerNode(kind: NodeKind): boolean {
   return (
     kind === 'gen-image' ||
@@ -271,18 +337,6 @@ function nodeHasSourceHandle(kind: NodeKind): boolean {
     kind === 'storyboard-viewer' ||
     kind === 'chat' ||
     kind === 'character-card'
-  );
-}
-
-function showNodeInfo(node: AppNode | undefined): void {
-  if (!node) return;
-  window.alert(
-    [
-      `类型：${node.kind}`,
-      `ID：${node.id}`,
-      `尺寸：${Math.round(node.width)} x ${Math.round(node.height)}`,
-      `位置：${Math.round(node.x)}, ${Math.round(node.y)}`,
-    ].join('\n'),
   );
 }
 

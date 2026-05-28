@@ -12,6 +12,26 @@ const LINK_SIG_PARAMS = ['sig', 'signature'] as const;
 const AUTO_PROVIDER_ID = 'new-api-auto';
 const AUTO_PROVIDER_NAME = 'new-api';
 
+/**
+ * 从 URL 参数 / 哈希中提取运行时凭证（API Key、用户 ID、签名等），
+ * 写入 localStorage 后立即从地址栏移除参数。
+ *
+ * ⚠️ 安全警告：
+ * 通过 URL 传递 API Key 存在显著风险：
+ *   - URL 会被浏览器历史记录持久化（即使从地址栏移除）
+ *   - 中转的代理、CDN、网关可能记录完整 URL
+ *   - HTTP Referer 头可能向第三方泄露
+ *   - 浏览器扩展和书签同步可能扩散
+ *
+ * 仅在以下场景使用：
+ *   - 受信任的同源跳转（公司内部 SSO、自托管网关）
+ *   - 测试环境的便利登录
+ *
+ * 生产环境应优先使用：
+ *   - 用户在设置面板手动粘贴 Key
+ *   - 服务端代理 + 短时 token
+ *   - 浏览器扩展安全地注入凭证
+ */
 export function importRuntimeConfigFromUrl(): boolean {
   if (typeof window === 'undefined') return false;
 
