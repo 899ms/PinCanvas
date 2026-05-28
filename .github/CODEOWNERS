@@ -1,0 +1,14 @@
+# 这些文件的改动必须由 @tdsoc2002 审批后才能合并
+# 语法参考: https://docs.github.com/articles/about-code-owners
+
+# 品牌、License、对外门面文件
+/README.md          @tdsoc2002
+/README_CN.md       @tdsoc2002
+/LICENSE            @tdsoc2002
+/package.json       @tdsoc2002
+/index.html         @tdsoc2002
+
+# 仓库元信息
+/.github/           @tdsoc2002
+/CONTRIBUTING.md    @tdsoc2002
+/CODE_OF_CONDUCT.md @tdsoc2002
