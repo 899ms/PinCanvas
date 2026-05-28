@@ -56,7 +56,7 @@ describe('importRuntimeConfigFromUrl', () => {
   });
 
   it('imports launch key into global config, auto provider, and default model bindings', () => {
-    setWindowUrl('http://canvas.xicily.com/#key=sk-test&access_token=user-access&uid=42');
+    setWindowUrl('http://canvas.example.com/#key=sk-test&access_token=user-access&uid=42');
 
     expect(importRuntimeConfigFromUrl()).toBe(true);
     expect(readPref<string>('global_key')).toBe('sk-test');
@@ -82,7 +82,7 @@ describe('importRuntimeConfigFromUrl', () => {
         providerId: 'new-api-auto',
       });
     }
-    expect(replacedUrl).toBe('http://canvas.xicily.com/');
+    expect(replacedUrl).toBe('http://canvas.example.com/');
   });
 
   it('updates the auto provider key without overwriting manual model bindings', () => {
@@ -108,7 +108,7 @@ describe('importRuntimeConfigFromUrl', () => {
         },
       }),
     );
-    setWindowUrl('http://canvas.xicily.com/#key=sk-new&uid=42');
+    setWindowUrl('http://canvas.example.com/#key=sk-new&uid=42');
 
     expect(importRuntimeConfigFromUrl()).toBe(true);
 

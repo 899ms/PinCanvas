@@ -4,6 +4,14 @@ import type { ModelDef } from '@/types/model';
 import type { ProviderConfig } from '@/types/provider';
 import { getPref, removePref, setPref } from './prefs';
 
+const API_KEY_PARAMS = ['key', 'apiKey', 'api_key'] as const;
+const ACCESS_TOKEN_PARAMS = ['access_token', 'accessToken', 'user_token', 'userToken'] as const;
+const USER_ID_PARAMS = ['uid', 'user', 'userId', 'user_id'] as const;
+const LINK_TS_PARAMS = ['ts', 'timestamp'] as const;
+const LINK_SIG_PARAMS = ['sig', 'signature'] as const;
+const AUTO_PROVIDER_ID = 'new-api-auto';
+const AUTO_PROVIDER_NAME = 'new-api';
+
 /**
  * 从 URL 参数 / 哈希中提取运行时凭证（API Key、用户 ID、签名等），
  * 写入 localStorage 后立即从地址栏移除参数。
@@ -24,15 +32,6 @@ import { getPref, removePref, setPref } from './prefs';
  *   - 服务端代理 + 短时 token
  *   - 浏览器扩展安全地注入凭证
  */
-
-const API_KEY_PARAMS = ['key', 'apiKey', 'api_key'] as const;
-const ACCESS_TOKEN_PARAMS = ['access_token', 'accessToken', 'user_token', 'userToken'] as const;
-const USER_ID_PARAMS = ['uid', 'user', 'userId', 'user_id'] as const;
-const LINK_TS_PARAMS = ['ts', 'timestamp'] as const;
-const LINK_SIG_PARAMS = ['sig', 'signature'] as const;
-const AUTO_PROVIDER_ID = 'new-api-auto';
-const AUTO_PROVIDER_NAME = 'new-api';
-
 export function importRuntimeConfigFromUrl(): boolean {
   if (typeof window === 'undefined') return false;
 
