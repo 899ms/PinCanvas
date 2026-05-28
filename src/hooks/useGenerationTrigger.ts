@@ -401,13 +401,6 @@ function clampImageDimension(value: number | '' | undefined): number | null {
   return Math.min(4096, Math.max(64, rounded));
 }
 
-function resolveImageQuality(value?: string): string {
-  if (value === 'high') return 'high';
-  if (value === 'medium') return 'medium';
-  if (value === 'low') return 'low';
-  return 'standard';
-}
-
 interface RunResult {
   kind: HistoryKind;
   model: string;
@@ -598,7 +591,7 @@ async function runImageGen(
     prompt: finalPrompt,
     size: resolveImageSize(node.settings),
     ratio: node.settings.ratio ?? '1:1',
-    quality: resolveImageQuality(node.settings.quality),
+    quality: 'standard',
     enableSequential: false,
   };
   if (refs.length > 0) {

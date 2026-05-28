@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "XXL Canvas Server Configuration",
+  "title": "PinCanvas Server Configuration",
   "type": "object",
   "properties": {
     "storage": {
       "type": "object",
-      "description": "对象存储配置（火山引擎 TOS）",
+      "description": "对象存储配置（S3 兼容）",
       "properties": {
         "region": {
           "type": "string",

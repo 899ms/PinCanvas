@@ -1,54 +1,78 @@
 # README 使用说明
 
-本项目维护两个版本的 README：
+本目录包含 PinCanvas 的设计文档。
 
 ## 文件说明
 
 - **README.md** - 公开版本（用于 GitHub 等公开仓库）
 - **README.internal.md** - 内部版本（包含内部信息、部署说明等）
 
-## 使用方法
+* **[architecture.md](./architecture.md)** - 系统架构设计
 
-### 推送到内部仓库
+  * 数据模型（节点、连线、项目）
 
-```bash
-# 1. 使用内部版 README
-cp README.internal.md README.md
+  * 状态管理（Zustand + Zundo）
 
-# 2. 提交并推送
-git add README.md
-git commit -m "docs: update README"
-git push origin main
-```
+  * 上游引用机制
 
-### 推送到公开仓库
+  * 并发队列调度
 
-```bash
-# 1. 确保 README.md 是公开版本（默认就是）
-# 如果之前切换过，需要恢复：
-git checkout README.md
+* **[node-types.md](./node-types.md)** - 节点类型规范
 
-# 2. 推送到公开仓库
-git push public main
-```
+  * 节点类型定义
 
-## 注意事项
+  * TypeScript 判别联合
 
-1. **默认状态**：`README.md` 保持为公开版本
-2. **内部开发**：需要内部信息时查看 `README.internal.md`
-3. **切换前检查**：推送前确认使用了正确的 README 版本
-4. **不要提交切换**：如果临时切换了 README，记得恢复后再提交
+  * 节点 settings 结构
 
-## 快速切换脚本（可选）
+* **[api-contract.md](./api-contract.md)** - API 契约规范
 
-可以创建以下脚本简化切换：
+  * OpenAI 兼容接口
 
-```bash
-# scripts/use-internal-readme.sh
-cp README.internal.md README.md
-echo "✅ 已切换到内部版 README"
+  * 请求/响应格式
 
-# scripts/use-public-readme.sh  
-git checkout README.md
-echo "✅ 已恢复公开版 README"
-```
+  * 错误处理
+
+* **[model-routing.md](./model-routing.md)** - 模型路由设计
+
+  * 模型定义（ModelDef）
+
+  * 路由规则
+
+  * 端点选择逻辑
+
+* **[persistence.md](./persistence.md)** - 持久化设计
+
+  * IndexedDB 存储策略
+
+  * localStorage 偏好键
+
+  * 自动保存机制
+
+## 快速导航
+
+### 我想了解...
+
+* **项目整体架构** → 阅读 `architecture.md`
+
+* **如何添加新节点** → 阅读 `node-types.md` + `architecture.md`
+
+* **如何对接新的 AI 模型** → 阅读 `model-routing.md` + `api-contract.md`
+
+* **数据如何存储** → 阅读 `persistence.md`
+
+### 我想开发...
+
+* **新的节点类型** → `node-types.md` + `src/canvas/nodes/`
+
+* **新的 AI 模型支持** → `model-routing.md` + `src/api/`
+
+* **新的存储方案** → `persistence.md` + `src/store/persistence.ts`
+
+## 文档维护
+
+* 架构变更需同步更新 `architecture.md`
+
+* 新增节点类型需更新 `node-types.md`
+
+* API 变更需更新 `api-contract.md`

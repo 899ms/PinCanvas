@@ -3,10 +3,13 @@ import type { AppNode } from '@/types/node';
 import type { ProjectSnapshot } from '@/types/project';
 import { setPref } from './prefs';
 
-const snapshotStore = createStore('tapnow-autosave', 'snapshots');
-const assetStore = createStore('tapnow-images', 'assets');
+const snapshotStore = createStore('pincanvas-autosave', 'snapshots');
+const assetStore = createStore('pincanvas-images', 'assets');
+const legacySnapshotStore = createStore('tapnow-autosave', 'snapshots');
+const legacyAssetStore = createStore('tapnow-images', 'assets');
 const KEY = 'current';
-const ASSET_REF_PREFIX = 'tapnow-asset://';
+const ASSET_REF_PREFIX = 'pincanvas-asset://';
+const LEGACY_ASSET_REF_PREFIXES = ['tapnow-asset://'];
 const memoryStores = new Map<string, Map<string, unknown>>();
 
 interface StoredAsset {
@@ -23,7 +26,14 @@ interface AssetExtraction {
 }
 
 export async function loadSnapshot(): Promise<ProjectSnapshot | null> {
-  const snap = await idbGet<ProjectSnapshot>('snapshots', KEY, snapshotStore);
+  let snap = await idbGet<ProjectSnapshot>('snapshots', KEY, snapshotStore);
+  if (!snap) {
+    const legacy = await idbGet<ProjectSnapshot>('snapshots', KEY, legacySnapshotStore);
+    if (legacy) {
+      await idbSet('snapshots', KEY, legacy, snapshotStore);
+      snap = legacy;
+    }
+  }
   if (!snap) return null;
   return {
     ...snap,
@@ -64,7 +74,9 @@ export async function putAsset(dataUrl: string): Promise<string> {
 
 export async function getAsset(id: string): Promise<string | null> {
   const asset = await idbGet<StoredAsset>('assets', id, assetStore);
-  return asset?.dataUrl ?? null;
+  if (asset) return asset.dataUrl;
+  const legacy = await idbGet<StoredAsset>('assets', id, legacyAssetStore);
+  return legacy?.dataUrl ?? null;
 }
 
 async function idbGet<T>(
@@ -181,11 +193,16 @@ function toAssetRef(id: string): string {
 }
 
 function isAssetRef(value: string): boolean {
-  return value.startsWith(ASSET_REF_PREFIX);
+  if (value.startsWith(ASSET_REF_PREFIX)) return true;
+  return LEGACY_ASSET_REF_PREFIXES.some((prefix) => value.startsWith(prefix));
 }
 
 function fromAssetRef(value: string): string {
-  return value.slice(ASSET_REF_PREFIX.length);
+  if (value.startsWith(ASSET_REF_PREFIX)) return value.slice(ASSET_REF_PREFIX.length);
+  for (const prefix of LEGACY_ASSET_REF_PREFIXES) {
+    if (value.startsWith(prefix)) return value.slice(prefix.length);
+  }
+  return value;
 }
 
 function dataUrlContentType(dataUrl: string): string | undefined {
