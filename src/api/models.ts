@@ -1,7 +1,7 @@
 import type { ModelDef } from '@/types/model';
 
 export const DEFAULT_MODELS: ModelDef[] = [
-  // xicily / new-api OpenAI-compatible
+  // OpenAI 兼容网关（Wan 系列等）
   {
     id: 'wan2.7-image',
     name: 'wan2.7-image',
