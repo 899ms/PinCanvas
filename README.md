@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="./docs/images/logo-mark.png" alt="图钉软件 Logo" width="96" />
+</p>
+
 **节点式 AI 创作画布：把图片、视频、文本生成节点连成可视化工作流**
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)![React](https://img.shields.io/badge/react-18-61dafb.svg)![TypeScript](https://img.shields.io/badge/typescript-5-3178c6.svg)![Bun](https://img.shields.io/badge/runtime-bun-000000.svg)
 
-[快速开始](#-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B) · [截图](#-%E6%88%AA%E5%9B%BE) · [文档](./docs) · [贡献](./CONTRIBUTING.md)
+[官网](https://www.tack2ai.cn/) · [快速开始](#-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B) · [截图](#-%E6%88%AA%E5%9B%BE) · [文档](./docs) · [贡献](./CONTRIBUTING.md)
 
 ***
 
@@ -256,12 +260,14 @@ bun run format     # 代码格式化
 
 ## 💬 社区
 
+* 🌐 **官网**: [tack2ai.cn](https://www.tack2ai.cn/)
+
 * 🌐 **LinuxDO**: [学 AI，上 L 站](https://linux.do/)
 
-* 🐧 微信交流群: [画布交流](https://work.weixin.qq.com/gm/d53e8b5af0e947814d050e9bb2ed020e)
+* 💬 **微信交流群**：扫码加入「画布交流」群
+
+  <img src="./docs/images/wechat-qr.png" alt="PinCanvas 微信交流群二维码" width="220" />
 
 ## 📄 许可证
 
-[MIT License](./LICENSE) © 2026 Tuding Software (图钉软件)
-
-⠀
+[MIT License](./LICENSE) © 2026 Tuding Software (图钉软件) · [tack2ai.cn](https://www.tack2ai.cn/)
