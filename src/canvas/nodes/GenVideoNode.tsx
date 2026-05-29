@@ -348,7 +348,7 @@ function PromptMentionEditor({
     <div className="relative">
       <div
         ref={editorRef}
-        className="nodrag min-h-28 max-h-40 overflow-y-auto rounded-[18px] border border-zinc-200 bg-zinc-50/80 px-4 py-3 text-sm leading-6 text-zinc-800 shadow-inner outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100 empty:before:text-zinc-400 empty:before:content-[attr(data-placeholder)]"
+        className="nodrag nowheel min-h-28 max-h-40 overflow-y-auto rounded-[18px] border border-zinc-200 bg-zinc-50/80 px-4 py-3 text-sm leading-6 text-zinc-800 shadow-inner outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100 empty:before:text-zinc-400 empty:before:content-[attr(data-placeholder)]"
         contentEditable={!disabled}
         suppressContentEditableWarning
         data-placeholder={placeholder}
@@ -386,8 +386,9 @@ function PromptMentionEditor({
       </button>
       {open && (
         <div
-          className="nodrag absolute z-50 max-h-64 w-56 overflow-y-auto rounded-2xl border border-zinc-200 bg-white/95 p-2 shadow-xl backdrop-blur"
+          className="nodrag nowheel absolute z-50 max-h-64 w-56 overflow-y-auto rounded-2xl border border-zinc-200 bg-white/95 p-2 shadow-xl backdrop-blur"
           style={{ top: pos.top, left: pos.left }}
+          onMouseDown={(e) => e.preventDefault()}
         >
           <div className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-zinc-400">
             可用@内容
